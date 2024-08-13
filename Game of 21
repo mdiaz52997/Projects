@@ -1,0 +1,279 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int drawCard() {
+    return rand() % 10 + 1;
+}
+
+
+
+int main() {
+        
+    srand(time(NULL));
+    int card1 = rand() % 10 + 1;
+    int card2 = rand() % 10 + 1;
+    int ace;
+    int ace2;
+    int playerTotal;
+    int compCard1 = rand() % 10 + 1;
+    int compCard2 = rand() % 10 + 1;
+    char game;
+    int answer;
+    int balance;
+    int bet;
+    int totalBet = 0;
+    int compBet = rand() % 100 + 1;
+    int compTotalBet;
+    int compTotal;
+    int compBalance = 1000;
+    int call;
+    int win;
+    int cardCnt = 0;
+    int compCardCnt = 0;
+    
+    
+    printf("Would you like to play a game of 21?\n");
+    scanf("%c", &game);
+    
+    if (game == 'Y' || game == 'y')
+    {
+        printf("Great!\n\n");
+    }
+    else
+    {
+        printf("Oh.......Okay");
+        exit(0);
+    }
+    
+    printf("How much money are you starting off with?\n");
+    scanf("%d",&balance);
+    
+    if (balance < 10)
+    {
+        printf("I'm sorry that is not enough to play!");
+        exit(0);
+    }
+    printf("Your starting balance is $%d", balance);
+    
+    printf("\n\nTo play starting bet is $10\n");
+    printf("Enter starting bet\n");
+    scanf("%d", &bet);
+    
+    while (bet != 10)
+    {
+        printf("\n\nThat is not enough to start. Please bet $10\n");
+        scanf("%d", &bet);
+    }
+    
+    printf("Your opponent put in $10");
+    
+    compBalance -= 10;
+    compTotalBet += 10;
+    balance -= bet;
+    totalBet += bet;
+    
+    printf("\nYour new balance is $%d", balance);
+
+    printf("\n\nThe dealer handed you 2 cards %d and %d", card1, card2);
+    printf("\n\nThe dealer handed your opponent 2 cards\n");
+    
+    cardCnt += 2;
+    compCardCnt += 2;
+    
+    
+    if(card1 == 1)
+    {
+        printf("\nThe dealer gave you an Ace\nWould you like it to be a 1 or an 11?\n");
+        scanf("%d", &ace);
+        card1 = ace;
+    }
+    else if(card2 == 1)
+    {
+        printf("\nThe dealer gave you and Ace\nWould you like it to be a 1 or an 11\n");
+        scanf("%d", &ace2);
+        card2 = ace2;
+    }
+    
+    playerTotal = card1 + card2;
+    compTotal = compCard1 + compCard2;
+    
+    printf("\n\nYou have a total of %d in your hand\n\n", playerTotal);
+    
+    printf("Place your bets\n");
+    scanf("%d", &bet);
+    
+    printf("\nYour opponent bet $%d", compBet);
+    
+    compTotalBet += compBet;
+    compBalance -= compBet;
+    totalBet += bet;
+    balance -= bet;
+    
+    if (compBet > bet)
+    {
+        printf("\nYour opponent raised\n");
+        printf("Would you like to call? (1 for yes, 2 for no)\n");
+        scanf("%d", &call);
+        
+        if(call == 1)
+        {
+            printf("\n\nEnter amount to match your opponent\n");
+            scanf("%d", &bet);
+            totalBet += bet;
+            balance -= bet;
+            
+        }
+        else
+        {
+            printf("You did not match your opponent. You are out!\n");
+            exit(0);
+        }
+    }
+    
+    if (bet > compBet)
+    {
+        printf("\nYour opponent matched your bet of $%d\n\n", bet);
+        compTotalBet -= compBet;
+        compTotalBet += bet;
+        
+    }
+    
+    printf("\nWould you like to draw another card? (1 for yes and 2 for no)\n");
+    scanf("%d", &answer);
+    
+    do
+    {
+        int draw = drawCard();
+        printf("The dealer handed you a %d\n", draw);
+        cardCnt++;
+        playerTotal += draw;
+        printf("You have a total of %d in your hand\n", playerTotal);
+        
+         if(playerTotal > 21)
+        {
+            printf("You went over 21 you lose!");
+            printf("\nYou lost $%d. Your balance is at $%d\n", totalBet, balance);
+            win = totalBet + compTotalBet;
+            compBalance += win;
+            break;
+            
+        }
+        
+        printf("\nWould you like to draw another card? (1 for yes and 2 for no)\n");
+        scanf("%d", &answer);
+    
+    }while (answer != 2);
+    
+    printf("\nIt is your oppenents turn now\n");
+    
+    while(compTotal < 17) 
+    {
+        int compDraw = drawCard();
+        printf("Your opponent drew a card\n");
+        compCardCnt++;
+        compTotal += compDraw;
+        
+        if (compTotal > 21)
+        {
+            printf("\nYour opponent went over 21. You won!");
+            win = totalBet + compTotalBet;
+            printf("\nYou won $%d", win);
+            balance += win;
+            break;
+        }
+    }
+    
+    printf("\n\nYou have a total of %d in your hand.\n", playerTotal);
+    
+    printf("Place your final bets!\n");
+    scanf("%d", &bet);
+    
+    printf("\nYour opponent bet $%d", compBet);
+    
+    compTotalBet += compBet;
+    compBalance -= compBet;
+    totalBet += bet;
+    balance -= bet;
+    
+    if (compBet > bet)
+    {
+        printf("\nYour opponent raised\n");
+        printf("Would you like to call? (1 for yes, 2 for no)\n");
+        scanf("%d", &call);
+        
+        if(call == 1)
+        {
+            printf("\n\nEnter amount to match your opponent\n");
+            scanf("%d", &bet);
+            totalBet += bet;
+            balance -= bet;
+            
+        }
+        else
+        {
+            printf("You did not match your opponent. You are out!\n");
+            exit(0);
+        }
+    }
+    
+    if (bet > compBet)
+    {
+        printf("\nYour opponent matched your bet of $%d\n\n", bet);
+        compTotalBet -= compBet;
+        compTotalBet += bet;
+        
+    }
+    
+    
+    if (playerTotal <= 21 && compTotal <= 21)
+    {
+        if (playerTotal > compTotal)
+        {
+            printf("\n\nYou won! You have %d and your opponent has %d", playerTotal, compTotal);
+            win = totalBet + compTotalBet;
+            printf("\nYou won $%d\n", win);
+            balance += win;
+            
+        }
+    }
+    if (playerTotal == compTotal)
+    {
+        if(cardCnt < compCardCnt)
+        {
+            printf("\n\nYou won! you got to %d in %d cards.\nWhile your opponent got it in %d cards",
+                playerTotal, cardCnt, compCardCnt);
+            win = totalBet + compTotalBet;
+            printf("You won $%d\n", win);
+            balance += win;
+        }
+        else
+        {
+            printf("\n\nYou lost! Your opponent got to %d in %d cards.\nWhile you got it in %d cards",
+                compTotal, compCardCnt, cardCnt);
+            win = totalBet + compTotalBet;
+            printf("\nYou lost $%d", totalBet);
+            compBalance += win;
+        }
+    }
+    if (playerTotal <= 21 && compTotal <= 21)
+    {
+        if(playerTotal < compTotal)
+        {
+            printf("\n\nYou lost! You have %d and your opponent has %d", playerTotal, compTotal);
+            win = totalBet + compTotalBet;
+            printf("\nYou lost $%d", totalBet);
+            compBalance += win;
+        }
+    }
+    
+    printf("\nYour balance is $%d\n", balance);
+    
+        
+    
+    
+   
+    
+    
+    
+}
